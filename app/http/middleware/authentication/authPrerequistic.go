@@ -1,10 +1,11 @@
-package middleware
+package authentication
 
 import (
 	"context"
 	"github.com/JobCreator/app/http/globals"
-	"github.com/go-kit/kit/log"
 	kithttp "github.com/go-kit/kit/transport/http"
+	"github.com/google/uuid"
+	logger "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 )
@@ -22,9 +23,10 @@ func HttpToContext() kithttp.RequestFunc {
 
 		token, ok := extractTokenFromAuthHeader(req.Header.Get("Authorization"))
 		if !ok {
-			log.WithPrefix(log.NewNopLogger(), "No authentication")
+			logger.Error(ctx, "token not found")
 		} else {
 			ct = context.WithValue(ct, globals.JWTTokenContextKey, token)
+			ct = context.WithValue(ct, globals.UUID, uuid.New())
 		}
 		return ct
 

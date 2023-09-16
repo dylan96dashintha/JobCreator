@@ -7,4 +7,12 @@ const (
 	JWTTokenContextKey contextKey = "JWTToken"
 )
 
+var (
+	JWTTokenSecret = []byte("secretkey")
+)
+
+const (
+	UUID = "uuid"
+)
+
 type contextKey string

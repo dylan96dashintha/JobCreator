@@ -2,7 +2,8 @@ package http
 
 import (
 	"github.com/JobCreator/app/http/endpoints"
-	"github.com/JobCreator/app/http/middleware"
+	"github.com/JobCreator/app/http/globals"
+	"github.com/JobCreator/app/http/middleware/authentication"
 	"github.com/JobCreator/app/http/request"
 	"github.com/JobCreator/app/http/response"
 	"github.com/gin-gonic/gin"
@@ -13,11 +14,11 @@ func InitServer() {
 	r := gin.Default()
 
 	opts := []httpTransport.ServerOption{
-		httpTransport.ServerBefore(middleware.HttpToContext()),
+		httpTransport.ServerBefore(authentication.HttpToContext()),
 	}
 
 	r.POST(`/v1/passenger/:passenger_id/job`, gin.WrapH(httpTransport.NewServer(
-		endpoints.CreateJob(),
+		authentication.AuthenticateHandler(globals.JWTTokenSecret)(endpoints.CreateJob()),
 		request.DecodeCreateJobRequestJson,
 		response.EncodeCreateJobResponseJson,
 		opts...,
