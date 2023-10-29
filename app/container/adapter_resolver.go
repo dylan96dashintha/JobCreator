@@ -23,3 +23,7 @@ func (a *adapterResolver) Resolve() Container {
 	}
 	return adapter
 }
+
+func resolveDBAdapter() {
+
+}
